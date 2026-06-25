@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPMB SDN CIBOGOR 01</title>
+    <link rel="shortcut icon" href="./assets/LOGO CIBOGOR 1 TANPA LB.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght=400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header>
+        <img src="./assets/TUTWURI HANDAYANI.png" class="logo" alt="Logo Kemendikdasmen">
+        <div style="flex:1">
+            <h2 style="margin:0;">SISTEM PENERIMAAN MURID BARU (SPMB)</h2>
+            <div>SDN CIBOGOR 01</div>
+            <small>Kecamatan Soreang • Kabupaten Bandung</small>
+        </div>
+        <img src="./assets/LOGO CIBOGOR 1 TANPA LB.png" class="logo" alt="Logo Sekolah">
+    </header>
+
+    <div style="background:#fff;border-bottom:1px solid #ddd;padding:15px;text-align:center;">
+        <button class="btn btn-gov" onclick="switchTab('pendaftaran')">Pendaftaran (Orang Tua)</button>
+        <button class="btn btn-gov" onclick="switchTab('pengumuman')">Hasil Penerimaan (Umum)</button>
+        <button class="btn btn-gov" onclick="openProtectedPage('operator')">Panel Verifikasi (Admin)</button>
+        <button class="btn" id="btnLogout" style="background:#dc3545; color:white; margin-left:5px; display:none;" onclick="logoutAdmin()">Logout Admin</button>
+    </div>
+
+    <div id="pendaftaran" class="container">
+        <h2>Formulir Pendaftaran Peserta Didik Baru</h2>
+        <form id="formPendaftaran">
+            <h3>Data Calon Siswa</h3>
+            <input type="text" id="nik" placeholder="NIK Calon Siswa" maxlength="16" required tabindex="1">
+            <input type="text" id="nama_siswa" placeholder="Nama Lengkap" required tabindex="2">
+            <input type="text" id="nisn" placeholder="NISN (Opsional)" tabindex="3">
+            <input type="date" id="tanggal_lahir" required tabindex="4">
+
+            <h3>Data Orang Tua</h3>
+            <input type="text" id="nama_ayah" placeholder="Nama Ayah" required tabindex="5">
+            <input type="text" id="nama_ibu" placeholder="Nama Ibu" required tabindex="6">
+            <input type="number" id="penghasilan" placeholder="Penghasilan Bulanan" required tabindex="7">
+
+            <h3>Zonasi Geografis</h3>
+            <label style="font-size:14px; color:#555;">Isi koordinat rumah secara manual, atau klik tombol di bawah untuk otomatis.</label>
+            <input type="text" id="latitude" placeholder="Latitude (Contoh: -7.0279)" required tabindex="8">
+            <input type="text" id="longitude" placeholder="Longitude (Contoh: 107.5283)" required tabindex="9">
+            <button type="button" class="btn" onclick="getLocation()" tabindex="10">📍 Ambil Koordinat GPS Otomatis</button>
+
+            <h3>Unggah Berkas Digital</h3>
+            <input type="file" id="file_berkas" accept=".pdf, .jpg, .jpeg, .png" required tabindex="11">
+            <br><br>
+            <button class="btn btn-gov" type="submit" tabindex="12">Simpan Pendaftaran</button>
+        </form>
+    </div>
+
+    <div id="pengumuman" class="container" style="display:none;">
+        <h2>Hasil Penerimaan Murid Baru</h2>
+
+        <div class="filter-grid">
+            <div>
+                <label>Cari Nama Pendaftar</label>
+                <input type="text" id="filterPenNamaSiswa" placeholder="Ketik nama siswa..." oninput="renderPengumumanTable()">
+            </div>
+            <div>
+                <label>Status Penerimaan</label>
+                <select id="filterPenStatus" onchange="renderPengumumanTable()">
+                    <option value="Semua">Semua Status</option>
+                    <option value="DITERIMA">DITERIMA</option>
+                    <option value="TIDAK DITERIMA">TIDAK DITERIMA</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table id="tablePengumuman">
+                <thead>
+                    <tr>
+                        <th class="sortable" onclick="doSortPen('peringkat_virtual')" title="Klik urutan peringkat">Peringkat <span id="arrPen_peringkat_virtual"></span></th>
+                        <th class="sortable" onclick="doSortPen('nama_siswa')" title="Klik urutan nama">Nama Calon Siswa <span id="arrPen_nama_siswa"></span></th>
+                        <th>Nama Orang Tua</th>
+                        <th class="sortable" onclick="doSortPen('jarak_meter')" title="Klik urutan jarak">Jarak Radius <span id="arrPen_jarak_meter"></span></th>
+                        <th class="sortable" onclick="doSortPen('status_lulus')" title="Klik urutan status">Status Penerimaan <span id="arrPen_status_lulus"></span></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="operator" class="container" style="display:none;">
+        <h2>Panel Verifikasi Operator</h2>
+
+        <div class="filter-grid">
+            <div>
+                <label>Cari Nama Pendaftar</label>
+                <input type="text" id="filterOpNama" placeholder="Ketik nama siswa..." oninput="renderOperatorTable()">
+            </div>
+            <div>
+                <label>Status Verifikasi</label>
+                <select id="filterOpStatus" onchange="renderOperatorTable()">
+                    <option value="Semua">Semua Status</option>
+                    <option value="Belum Diperiksa">Belum Diperiksa</option>
+                    <option value="Valid">Valid</option>
+                    <option value="Tidak Valid">Tidak Valid</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+            <table id="tableOperator">
+                <thead>
+                    <tr>
+                        <th class="sortable" onclick="doSortOp('id')" title="Klik urutan tanggal">Waktu Daftar <span id="arrOp_id"></span></th>
+                        <th>NIK</th>
+                        <th class="sortable" onclick="doSortOp('nama_siswa')" title="Klik urutan nama">Nama & Berkas <span id="arrOp_nama_siswa"></span></th>
+                        <th class="sortable" onclick="doSortOp('jarak_meter')" title="Klik urutan jarak">Jarak Radius <span id="arrOp_jarak_meter"></span></th>
+                        <th class="sortable" onclick="doSortOp('status_validasi')" title="Klik urutan status">Status Verifikasi <span id="arrOp_status_validasi"></span></th>
+                        <th>Aksi Dokumen</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <div id="loginOverlay">
+        <div class="login-box">
+            <h3 style="margin-top:0">Login Administrator</h3>
+            <input type="text" id="username" placeholder="Username" tabindex="1" onkeypress="cekEnterLogin(event)">
+            <input type="password" id="password" placeholder="Password" tabindex="2" onkeypress="cekEnterLogin(event)">
+            <button class="btn btn-gov" onclick="loginAdmin()" tabindex="3">Login</button>
+            <button class="btn" onclick="closeLogin()" tabindex="4">Cancel</button>
+        </div>
+    </div>
+    
+    <script src="main.js"></script>
+</body>
+</html>
