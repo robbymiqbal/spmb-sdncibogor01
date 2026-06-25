@@ -158,7 +158,7 @@ document.getElementById('formPendaftaran').addEventListener('submit', function(e
         nik: document.getElementById('nik').value,
         nama_siswa: document.getElementById('nama_siswa').value,
         nisn: document.getElementById('nisn').value || '-',
-        tempat_lahir: document.getElementById('tempat_lahir').value,
+        tempat_lahir: document.getElementById('tempat_lahir').value, // Mengembalikan Tempat Lahir bawaan asli
         tanggal_lahir: tglLahirInput,
         nama_ayah: document.getElementById('nama_ayah').value,
         nama_ibu: document.getElementById('nama_ibu').value,
@@ -237,9 +237,10 @@ function renderPengumumanTable() {
 
         let peringkatTeks = item.status_validasi === 'Tidak Valid' ? '-' : item.peringkat_virtual;
 
+        // TAMPILAN TEMPAT LAHIR DI REVISI SESUAI BAWAAN ASLI
         tr.innerHTML = `
             <td><b>${peringkatTeks}</b></td>
-            <td><b>${item.nama_siswa.toUpperCase()}</b><br><small style="color:#666;">TTL: ${item.tempat_lahir}, ${item.tanggal_lahir}</small></td>
+            <td><b>${item.nama_siswa.toUpperCase()}</b><br><small style="color:#666;">TTL: ${item.tempat_lahir ? item.tempat_lahir : '-'}, ${item.tanggal_lahir}</small></td>
             <td>Ayah: ${item.nama_ayah}<br>Ibu: ${item.nama_ibu}</td>
             <td>${item.jarak_meter.toLocaleString('id-ID')} Meter</td>
             <td>${statusHtml}</td>
@@ -274,7 +275,7 @@ function updateSortArrowsPen() {
 }
 
 // ==========================================
-// RENDER TABEL PANEL VERIFIKASI (UNTUK ADMIN)
+// RENDER TABEL PANEL VERIFIKASI (UNTUK ADMIN) - MENYALAKAN CRUD BAWAAN ASLI KEMBALI
 // ==========================================
 function renderOperatorTable() {
     const tbody = document.querySelector('#tableOperator tbody');
@@ -320,10 +321,11 @@ function renderOperatorTable() {
             badgeValidasi = `<span style="background:#ffc107; color:#333; padding:4px 8px; border-radius:4px; font-size:12px; font-weight:bold;">BELUM DIPERIKSA</span>`;
         }
 
+        // KEMBALIKAN FITUR CRUD LENGKAP: TEMPAT LAHIR DAN TOMBOL AKSI BERKAS ASLI
         tr.innerHTML = `
             <td><small>${waktuDaftar}</small></td>
             <td><code>${item.nik}</code><br><small style="color:#555;">NISN: ${item.nisn}</small></td>
-            <td><b>${item.nama_siswa.toUpperCase()}</b><br><small style="color:#0056b3; cursor:pointer;" onclick="showCustomAlert('Simulasi Berkas', 'Membuka file simulasi berkas digital milik: ${item.nama_siswa}', 'info')">📄 Lihat Berkas Dokumen</small></td>
+            <td><b>${item.nama_siswa.toUpperCase()}</b><br><small style="color:#666;">TTL: ${item.tempat_lahir ? item.tempat_lahir : '-'}, ${item.tanggal_lahir}</small><br><small style="color:#0056b3; cursor:pointer;" onclick="showCustomAlert('Simulasi Berkas', 'Membuka file simulasi berkas digital milik: ${item.nama_siswa}', 'info')">📄 Lihat Berkas Dokumen</small></td>
             <td>${item.jarak_meter.toLocaleString('id-ID')} m</td>
             <td>${badgeValidasi}</td>
             <td>
