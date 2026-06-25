@@ -1,4 +1,4 @@
-# Sistem Penerimaan Murid Baru (SPMB) - SDN Cibogor 01 
+# Sistem Penerimaan Murid Baru (SPMB) - SDN Cibogor 01
 
 Aplikasi pendaftaran berbasis web (*Client-Side*) untuk mensimulasikan Penerimaan Murid Baru (SPMB) di SDN Cibogor 01 menggunakan seleksi **umur dan kelengkapan data juga berdasarkan jarak rumah**.
 
