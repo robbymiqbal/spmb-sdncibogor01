@@ -1,10 +1,10 @@
 # Sistem Penerimaan Murid Baru (SPMB) - SDN Cibogor 01
 
-Aplikasi pendaftaran berbasis web (*Client-Side*) untuk mensimulasikan Penerimaan Murid Baru (SPMB) di SDN Cibogor 01 menggunakan seleksi **Zonasi Otomatis** berdasarkan jarak radius (meter).
+Aplikasi pendaftaran berbasis web (*Client-Side*) untuk mensimulasikan Penerimaan Murid Baru (SPMB) di SDN Cibogor 01 menggunakan seleksi **umur dan kelengkapan data juga berdasarkan jarak rumah**.
 
 ## Fitur Utama
 - **Pendaftaran (Orang Tua):** Formulir input data calon siswa beserta unggah dokumen/berkas pendaftaran.
-- **Hasil Penerimaan (Umum):** Halaman publik untuk melihat urutan peringkat kelulusan berdasarkan jarak radius terdekat secara *real-time*.
+- **Hasil Penerimaan (Umum):** Halaman publik untuk melihat urutan peringkat kelulusan berdasarkan umur, kelengkapan berkas dan jarak rumah secara *real-time*.
 - **Panel Verifikasi (Admin):** Halaman khusus operator sekolah untuk memeriksa berkas, melakukan validasi (Setuju/Tolak), serta fitur *sorting* & *filtering* data pendaftar.
 - **Simpan Data Lokal:** Menggunakan `localStorage` browser sehingga data demonstrasi tetap tersimpan saat halaman dimuat ulang.
 
