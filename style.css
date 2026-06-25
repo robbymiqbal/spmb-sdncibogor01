@@ -301,7 +301,7 @@ table tr:nth-child(even) {
     flex: 1;
 }
 
-/* STYLE OVERLAY MODAL NOTIFIKASI MODERN */
+/* OVERLAY MODAL NOTIFIKASI MODERN */
 .custom-alert-overlay {
     position: fixed;
     top: 0;
