@@ -3,29 +3,28 @@ let dataPendaftaran = JSON.parse(localStorage.getItem('spmb_data')) || [];
 let currentSortPen = { key: 'peringkat_virtual', asc: true };
 let currentSortOp = { key: 'id', asc: true };
 
-// Fungsi Modal Alert Kustom Modern
-function showCustomAlert(title, message, type = 'success') {
+// SISTEM JAVASCRIPT POP-UP ANIMASI MODERN KUSTOM
+function showCustomAlert(title, message, iconType = 'info') {
     const overlay = document.getElementById('customAlertOverlay');
-    const txtTitle = document.getElementById('customAlertTitle');
-    const txtMsg = document.getElementById('customAlertMessage');
-    const divIcon = document.getElementById('customAlertIcon');
-
-    txtTitle.innerText = title;
-    txtMsg.innerText = message;
-
-    if (type === 'success') {
-        divIcon.innerText = '✅';
-    } else if (type === 'error') {
-        divIcon.innerText = '❌';
+    document.getElementById('customAlertTitle').innerText = title;
+    document.getElementById('customAlertMessage').innerText = message;
+    
+    const iconDiv = document.getElementById('customAlertIcon');
+    if (iconType === 'success') {
+        iconDiv.innerText = '✅';
+    } else if (iconType === 'error') {
+        iconDiv.innerText = '❌';
     } else {
-        divIcon.innerText = 'ℹ️';
+        iconDiv.innerText = 'ℹ️';
     }
-
-    overlay.style.display = 'flex';
+    
+    // Aktifkan class CSS untuk memicu animasi masuk smooth
+    overlay.classList.add('active');
 }
 
 function closeCustomAlert() {
-    document.getElementById('customAlertOverlay').style.display = 'none';
+    const overlay = document.getElementById('customAlertOverlay');
+    overlay.classList.remove('active');
 }
 
 // Fungsi ganti tab/halaman utama
@@ -81,7 +80,7 @@ function loginAdmin() {
 function logoutAdmin() {
     sessionStorage.removeItem('isAdminLoggedIn');
     document.getElementById('btnLogout').style.display = 'none';
-    showCustomAlert('Info Logout', 'Anda telah keluar dari mode operator.', 'info');
+    showCustomAlert('Info Keluar', 'Anda telah keluar dari mode operator.', 'info');
     switchTab('pendaftaran');
 }
 
@@ -117,7 +116,7 @@ function getLocation() {
             }
         );
     } else {
-        showCustomAlert('Not Supported', 'Browser Anda tidak mendukung fitur GPS.', 'error');
+        showCustomAlert('Tidak Mendukung', 'Browser Anda tidak mendukung fitur GPS.', 'error');
     }
 }
 
@@ -141,11 +140,7 @@ document.getElementById('formPendaftaran').addEventListener('submit', function(e
     }
 
     if (age < 6) {
-        showCustomAlert(
-            'Pendaftaran Ditolak', 
-            `Umur calon siswa baru ${age} tahun per 1 Juli 2026. Berdasarkan aturan, syarat pendaftaran minimal genap berusia 6 tahun.`, 
-            'error'
-        );
+        showCustomAlert('Pendaftaran Ditolak', `Umur calon siswa baru ${age} tahun per 1 Juli 2026. Berdasarkan aturan, syarat pendaftaran minimal genap berusia 6 tahun.`, 'error');
         return;
     }
 
@@ -158,7 +153,7 @@ document.getElementById('formPendaftaran').addEventListener('submit', function(e
         nik: document.getElementById('nik').value,
         nama_siswa: document.getElementById('nama_siswa').value,
         nisn: document.getElementById('nisn').value || '-',
-        tempat_lahir: document.getElementById('tempat_lahir').value, // Mengembalikan Tempat Lahir bawaan asli
+        tempat_lahir: document.getElementById('tempat_lahir').value,
         tanggal_lahir: tglLahirInput,
         nama_ayah: document.getElementById('nama_ayah').value,
         nama_ibu: document.getElementById('nama_ibu').value,
@@ -181,6 +176,7 @@ document.getElementById('formPendaftaran').addEventListener('submit', function(e
 // ==========================================
 function renderPengumumanTable() {
     const tbody = document.querySelector('#tablePengumuman tbody');
+    if (!tbody) return;
     tbody.innerHTML = '';
 
     let sortedData = [...dataPendaftaran].sort((a, b) => a.jarak_meter - b.jarak_meter);
@@ -237,7 +233,6 @@ function renderPengumumanTable() {
 
         let peringkatTeks = item.status_validasi === 'Tidak Valid' ? '-' : item.peringkat_virtual;
 
-        // TAMPILAN TEMPAT LAHIR DI REVISI SESUAI BAWAAN ASLI
         tr.innerHTML = `
             <td><b>${peringkatTeks}</b></td>
             <td><b>${item.nama_siswa.toUpperCase()}</b><br><small style="color:#666;">TTL: ${item.tempat_lahir ? item.tempat_lahir : '-'}, ${item.tanggal_lahir}</small></td>
@@ -275,10 +270,11 @@ function updateSortArrowsPen() {
 }
 
 // ==========================================
-// RENDER TABEL PANEL VERIFIKASI (UNTUK ADMIN) - MENYALAKAN CRUD BAWAAN ASLI KEMBALI
+// RENDER TABEL PANEL VERIFIKASI (UNTUK ADMIN)
 // ==========================================
 function renderOperatorTable() {
     const tbody = document.querySelector('#tableOperator tbody');
+    if (!tbody) return;
     tbody.innerHTML = '';
 
     const filterNama = document.getElementById('filterOpNama').value.toLowerCase();
@@ -321,7 +317,6 @@ function renderOperatorTable() {
             badgeValidasi = `<span style="background:#ffc107; color:#333; padding:4px 8px; border-radius:4px; font-size:12px; font-weight:bold;">BELUM DIPERIKSA</span>`;
         }
 
-        // KEMBALIKAN FITUR CRUD LENGKAP: TEMPAT LAHIR DAN TOMBOL AKSI BERKAS ASLI
         tr.innerHTML = `
             <td><small>${waktuDaftar}</small></td>
             <td><code>${item.nik}</code><br><small style="color:#555;">NISN: ${item.nisn}</small></td>
